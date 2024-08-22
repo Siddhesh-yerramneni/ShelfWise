@@ -1,7 +1,8 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
-import userRoute from './routes/user.route.js';
+import userRoutes from './routes/user.route.js';
+import authRoutes from './routes/auth.route.js';
 dotenv.config();
 
 mongoose.connect(process.env.MONGO)
@@ -12,8 +13,12 @@ mongoose.connect(process.env.MONGO)
     console.log(err)
 });
 const app = express();
+
+app.use(express.json());
+
 app.listen(6191, ()=> {
     console.log("Server is running on port 6191");
 });
 
-app.use('/api/user', userRoute);
+app.use('/api/user', userRoutes);
+app.use('/api/auth', authRoutes)

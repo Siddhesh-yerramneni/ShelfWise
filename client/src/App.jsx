@@ -1,9 +1,20 @@
-import React from 'react'
-
+import React from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Home from './pages/Home.jsx';
+import About from './pages/About.jsx';
+import Signup from './pages/Signup.jsx';
+import Login from './pages/Login.jsx';
+import Header from './components/Header.jsx';
 export default function App() {
   return (
-    <div>
-     <h1 className='text-3xl text-yellow-300'>Currently under development - Minions are have been notified to get into the work!!</h1>
-    </div>
-  )
+    <BrowserRouter>
+    <Header/>
+      <Routes>
+        <Route path='/' element={<Home/>}/>
+        <Route path='/about' element={<About/>}/>
+        <Route path='/login' element={<Login/>}/>
+        <Route path='/signup' element={<Signup/>}/>
+      </Routes>
+    </BrowserRouter>
+  );
 }

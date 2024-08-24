@@ -1,20 +1,17 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-
+import {useNavigate} from 'react-router-dom';
 const SignUp = () => {
-  const [formData, setFormData] = useState({
-    email: '',
-    username: '',
-    password: '',
-  });
-
+  const [formData, setFormdata] = useState({});
+  const [error, setError] = useState('');
   const navigate = useNavigate();
-
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormdata(
+      {
+        ...formData,
+        [e.target.id] : e.target.value,
+      }
+    );
   };
-
   const handleSubmit = async(e) => {
     e.preventDefault();
     try {
@@ -27,16 +24,32 @@ const SignUp = () => {
           body: JSON.stringify(formData),
         }
       );
-      navigate('/');
-    } catch (error) {
-      console.log(error);
+    const data = await res.json();
+    if(data.success===false) {
+      setError(data.message);
+      return; 
     }
-  };
-
+    setError('');
+    navigate("/");
+    } catch (error) {
+      setError(error.message);
+    }
+    };
   return (
     <div className="min-h-screen flex items-center justify-center bg-zinc-200">
       <div className="bg-rose-400 p-8 rounded-lg shadow-md w-full max-w-md">
         <h2 className="text-2xl font-bold text-center text-lightBlue-700 mb-6">Sign Up</h2>
+        {/* Error Alert */}
+        {error && (
+          <div className="flex items-center p-4 mb-4 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 dark:border-red-800" role="alert">
+            <svg className="flex-shrink-0 inline w-4 h-4 mr-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+            </svg>
+            <div>
+              <span className="font-medium">Danger alert!</span>{error}
+            </div>
+          </div>
+        )}
         <form onSubmit={handleSubmit}>
           {/* Email Field */}
           <div className="mb-4">
@@ -44,10 +57,8 @@ const SignUp = () => {
             <input
               type="email"
               id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
               required
+              onChange={handleChange}
               className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-lightBlue-500"
               placeholder="Enter your email"
             />
@@ -59,10 +70,8 @@ const SignUp = () => {
             <input
               type="text"
               id="username"
-              name="username"
-              value={formData.username}
-              onChange={handleChange}
               required
+              onChange={handleChange}
               className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-lightBlue-500"
               placeholder="Enter your username"
             />
@@ -74,10 +83,8 @@ const SignUp = () => {
             <input
               type="password"
               id="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
               required
+              onChange={handleChange}
               className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-lightBlue-500"
               placeholder="Enter your password"
             />
@@ -86,7 +93,7 @@ const SignUp = () => {
           {/* Submit Button */}
           <button
             type="submit"
-            className="w-full bg-lightBlue-500 text-white py-3 rounded-lg font-semibold hover:bg-lightBlue-600 transition duration-300"
+            className="w-full bg-white text-black py-3 rounded-lg font-semibold hover:bg-zinc-300 transition duration-300 border"
           >
             Sign Up
           </button>

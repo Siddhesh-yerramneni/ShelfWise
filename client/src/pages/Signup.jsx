@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {useNavigate} from 'react-router-dom';
+import OAuth from '../components/OAuth.jsx';
 const SignUp = () => {
   const [formData, setFormdata] = useState({});
   const [error, setError] = useState('');
@@ -37,7 +38,7 @@ const SignUp = () => {
     };
   return (
     <div className="min-h-screen flex items-center justify-center bg-zinc-200">
-      <div className="bg-rose-400 p-8 rounded-lg shadow-md w-full max-w-md">
+      <div className=" bg-rose-400 p-8 rounded-lg shadow-md w-full max-w-md">
         <h2 className="text-2xl font-bold text-center text-lightBlue-700 mb-6">Sign Up</h2>
         {/* Error Alert */}
         {error && (
@@ -97,6 +98,7 @@ const SignUp = () => {
           >
             Sign Up
           </button>
+          <OAuth/>
         </form>
 
         {/* Login Link */}

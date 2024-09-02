@@ -1,30 +1,38 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useRef } from 'react';
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { app } from '../../firebase.js';
+import { logInSuccess } from '../redux/User/userSlice'; // Assuming this updates the user in Redux
+
 export default function Profile() {
   const { currentUser } = useSelector((state) => state.user);
+  const dispatch = useDispatch(); // Dispatch function for Redux actions
   const fileRef = useRef(null);
   const [file, setFile] = useState(undefined);
   const [fileUploadError, setFileUploadError] = useState(false);
-  const [formData, setFormData] = useState({});
-  console.log(file);
-  console.log(formData);
+  const [formData, setFormData] = useState({
+    username: currentUser.username,
+    email: currentUser.email,
+    avatar: currentUser.avatar,
+  });
 
-  useEffect(()=> {
-    if(file){
+  useEffect(() => {
+    if (file) {
       handleFileUpload();
     }
   }, [file]);
+
   const handleFileUpload = () => {
     const storage = getStorage(app);
     const fileName = new Date().getTime() + file.name;
     const storageRef = ref(storage, fileName);
     const uploadTask = uploadBytesResumable(storageRef, file);
-    uploadTask.on('state_changed',
+
+    uploadTask.on(
+      'state_changed',
       (snapshot) => {
-        const progress = (snapshot.bytesTransferred/snapshot.totalBytes)*100;
+        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
         console.log(progress);
       },
       (error) => {
@@ -32,42 +40,91 @@ export default function Profile() {
       },
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) =>
-          setFormData({ ...formData, avatar: downloadURL })
+          setFormData((prevFormData) => ({
+            ...prevFormData,
+            avatar: downloadURL,
+          }))
         );
       }
     );
   };
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.id]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await fetch(`/api/user/update/${currentUser._id}`, {
+        method: 'POST', // Use PUT for updates
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || data.success === false) {
+        console.log('Error:', data.message);
+        return;
+      }
+
+      // Update Redux state with the updated user data
+      dispatch(logInSuccess(data)); // Dispatch the action to update the user in the Redux store
+      console.log('Update successful:', data.message);
+
+    } catch (error) {
+      console.error('Error during update:', error);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-zinc-200 flex items-center justify-center py-5"> {/* Background container */}
       <div className="p-6 max-w-lg w-full bg-rose-400 rounded-lg shadow-lg"> {/* Form container */}
         <h1 className="text-3xl font-semibold text-center text-black mb-4">Profile</h1>
-        <form className="flex flex-col gap-4">
-          <input type="file" ref={fileRef} hidden accept='image/*'
-          onChange={(e)=>setFile(e.target.files[0])}/>
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          <input
+            type="file"
+            ref={fileRef}
+            hidden
+            accept="image/*"
+            onChange={(e) => setFile(e.target.files[0])}
+          />
           <img
-            src={ formData.avatar || currentUser.avatar}
+            src={formData.avatar || currentUser.avatar}
             alt="Profile"
             className="rounded-full h-24 w-24 object-cover self-center mt-2 cursor-pointer"
-            onClick={()=> fileRef.current.click()}
+            onClick={() => fileRef.current.click()}
           />
           <input
             type="text"
             placeholder="Username"
-            defaultValue={currentUser.username}
+            id="username"
+            value={formData.username}
             className="border p-3 rounded-lg"
+            onChange={handleChange}
           />
           <input
             type="email"
             placeholder="E-mail"
-            defaultValue={currentUser.email}
+            id="email"
+            value={formData.email}
             className="border p-3 rounded-lg"
+            onChange={handleChange}
           />
           <input
             type="password"
+            id="password"
             placeholder="*******"
             className="border p-3 rounded-lg"
+            onChange={handleChange}
           />
-          <button className="rounded-lg border p-3 bg-white hover:bg-gray-200 transition" type="button">
+          <button
+            className="rounded-lg border p-3 bg-white hover:bg-gray-200 transition"
+            type="submit"
+          >
             Update
           </button>
         </form>

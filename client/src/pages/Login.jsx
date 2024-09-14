@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { logInStart, logInFailure, logInSuccess } from '../redux/User/userSlice';
+import OAuth from '../components/OAuth.jsx';
 
 export default function Login() {
   const [formData, setFormdata] = useState({});
@@ -87,7 +88,7 @@ export default function Login() {
           >
             Login
           </button>
-
+          <OAuth/>
           {/* Login Link */}
         <p className=" text-black text-center mt-4">
           Don't have an account?{' '}

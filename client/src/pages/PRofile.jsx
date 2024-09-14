@@ -1,21 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, setTimeout } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useRef } from 'react';
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { app } from '../../firebase.js';
-import { logInSuccess } from '../redux/User/userSlice'; // Assuming this updates the user in Redux
+import { updateStart, updateSuccess, updateFailure, deleteUserFailure, deleteUserStart, deleteUserSuccess } from '../redux/User/userSlice'; // Assuming this updates the user in Redux
+import { useNavigate } from 'react-router-dom';
 
 export default function Profile() {
-  const { currentUser } = useSelector((state) => state.user);
+  const { currentUser, error } = useSelector((state) => state.user);
   const dispatch = useDispatch(); // Dispatch function for Redux actions
+  const navigate = useNavigate();
   const fileRef = useRef(null);
   const [file, setFile] = useState(undefined);
   const [fileUploadError, setFileUploadError] = useState(false);
-  const [formData, setFormData] = useState({
-    username: currentUser.username,
-    email: currentUser.email,
-    avatar: currentUser.avatar,
-  });
+  const [formData, setFormData] = useState([]);
+  const [successMessage, setSuccessMessage] = useState(''); // For success alert
+  const [errorMessage, setErrorMessage] = useState(''); // For error alert
+  const [deleteMessage, setDeleteMessage] = useState(''); // For delete alert
 
   useEffect(() => {
     if (file) {
@@ -56,8 +57,9 @@ export default function Profile() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      dispatch(updateStart());
       const res = await fetch(`/api/user/update/${currentUser._id}`, {
-        method: 'POST', // Use PUT for updates
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -67,23 +69,82 @@ export default function Profile() {
       const data = await res.json();
 
       if (!res.ok || data.success === false) {
-        console.log('Error:', data.message);
+        dispatch(updateFailure(data.message));
+        setErrorMessage('Failed to update profile.'); // Set error message
         return;
       }
 
       // Update Redux state with the updated user data
-      dispatch(logInSuccess(data)); // Dispatch the action to update the user in the Redux store
+      dispatch(updateSuccess(data)); // Dispatch the action to update the user in the Redux store
+      setSuccessMessage('Profile updated successfully!'); // Set success message
+      setErrorMessage(''); // Clear any previous error message
       console.log('Update successful:', data.message);
 
     } catch (error) {
+      dispatch(updateFailure(error.message));
+      setErrorMessage('An error occurred during the update.'); // Set error message
+      setSuccessMessage(''); // Clear success message
       console.error('Error during update:', error);
     }
   };
 
+  const handleDelete = async () => {
+    try {
+      dispatch(deleteUserStart());
+      const res = await fetch(`/api/user/delete/${currentUser._id}`, {
+        method: 'DELETE',
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || data.success === false) {
+        dispatch(deleteUserFailure(data.message));
+        setErrorMessage('Failed to delete user.'); // Set error message
+        return;
+      }
+
+      dispatch(deleteUserSuccess()); // Clear currentUser from Redux store
+      setDeleteMessage('User deleted successfully!'); // Set delete success message
+      setErrorMessage(''); // Clear any previous error message
+      console.log('User deleted successfully');
+
+      // Redirect after a short delay (if needed)
+      window.setTimeout(() => {
+        navigate('/login');
+      }, 2000); // Redirects after 2 seconds
+      
+    } catch (error) {
+      dispatch(deleteUserFailure(error.message));
+      setErrorMessage('An error occurred during user deletion.'); // Set error message
+      setDeleteMessage(''); // Clear delete message
+      console.error('Error during deletion:', error);
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-zinc-200 flex items-center justify-center py-5"> {/* Background container */}
-      <div className="p-6 max-w-lg w-full bg-rose-400 rounded-lg shadow-lg"> {/* Form container */}
+    <div className="min-h-screen bg-zinc-200 flex items-center justify-center py-5">
+      {/* Background container */}
+      <div className="p-6 max-w-lg w-full bg-rose-400 rounded-lg shadow-lg">
+        {/* Form container */}
         <h1 className="text-3xl font-semibold text-center text-black mb-4">Profile</h1>
+
+        {/* Success, Error, or Delete Alerts */}
+        {successMessage && (
+          <div className="text-green-500 text-center mb-4">
+            {successMessage}
+          </div>
+        )}
+        {errorMessage && (
+          <div className="text-red-500 text-center mb-4">
+            {errorMessage}
+          </div>
+        )}
+        {deleteMessage && (
+          <div className="text-blue-500 text-center mb-4">
+            {deleteMessage}
+          </div>
+        )}
+        
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <input
             type="file"
@@ -102,7 +163,7 @@ export default function Profile() {
             type="text"
             placeholder="Username"
             id="username"
-            value={formData.username}
+            defaultValue={currentUser.username}
             className="border p-3 rounded-lg"
             onChange={handleChange}
           />
@@ -110,7 +171,7 @@ export default function Profile() {
             type="email"
             placeholder="E-mail"
             id="email"
-            value={formData.email}
+            defaultValue={currentUser.email}
             className="border p-3 rounded-lg"
             onChange={handleChange}
           />
@@ -129,7 +190,7 @@ export default function Profile() {
           </button>
         </form>
         <div className="flex justify-between mt-5 text-white">
-          <span className="cursor-pointer hover:underline">Delete account</span>
+          <span className="cursor-pointer hover:underline" onClick={handleDelete}>Delete account</span>
           <span className="cursor-pointer hover:underline">Sign out</span>
         </div>
       </div>

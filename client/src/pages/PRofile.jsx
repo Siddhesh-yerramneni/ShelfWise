@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useRef } from 'react';
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { app } from '../../firebase.js';
-import { updateStart, updateSuccess, updateFailure, deleteUserFailure, deleteUserStart, deleteUserSuccess } from '../redux/User/userSlice'; // Assuming this updates the user in Redux
+import { updateStart, updateSuccess, updateFailure, deleteUserFailure, deleteUserStart, deleteUserSuccess, logOutUserFailure, logOutUserStart, logOutUserSuccess } from '../redux/User/userSlice'; // Assuming this updates the user in Redux
 import { useNavigate } from 'react-router-dom';
 
 export default function Profile() {
@@ -121,6 +121,21 @@ export default function Profile() {
     }
   };
 
+  const handleLogOut = async() => {
+    try {
+      dispatch(logOutUserStart());
+      const res = await fetch(`/api/auth/logout`);
+      const data = res.json();
+      if(data.success===false) {
+        dispatch(logOutUserFailure(data.message));
+        return;
+      }
+      dispatch(logOutUserSuccess(data));
+    } catch (error) {
+      dispatch(logOutUserFailure(data.message));
+    }
+  };
+
   return (
     <div className="min-h-screen bg-zinc-200 flex items-center justify-center py-5">
       {/* Background container */}
@@ -191,7 +206,7 @@ export default function Profile() {
         </form>
         <div className="flex justify-between mt-5 text-white">
           <span className="cursor-pointer hover:underline" onClick={handleDelete}>Delete account</span>
-          <span className="cursor-pointer hover:underline">Sign out</span>
+          <span className="cursor-pointer hover:underline" onClick={handleLogOut} >Sign out</span>
         </div>
       </div>
     </div>

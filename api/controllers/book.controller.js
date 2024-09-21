@@ -16,3 +16,12 @@ export const addBook = async(req,res,next) => {
         next(error);
     }
 };
+
+export const homeBooks = async(req,res) => {
+    try {
+        const books = await Book.find().limit(4);
+        res.json(books);
+    } catch (error) {
+        next(error);
+    }
+};

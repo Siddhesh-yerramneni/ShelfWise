@@ -1,7 +1,22 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 const Home = () => {
+  const [homeBooks, setHomeBooks] = useState([]);
+
+  useEffect(()=>{
+    const fetchHomeBooks = async() => {
+      try {
+        const res = await fetch('/api/book/homeBooks');
+        const data = await res.json();
+        setHomeBooks(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchHomeBooks();
+  }, []);
+
   return (
     <div className='shadow'>
       {/* Hero Section */}
@@ -54,51 +69,33 @@ const Home = () => {
 
       {/* Popular Books Section */}
       <section className="py-16 bg-lightBlue-50">
-        <div className="container mx-auto">
-          <h2 className="text-2xl sm:text-3xl font-bold text-center text-slate-800">
+        <div className='container mx-auto'>
+        <h2 className="text-2xl sm:text-3xl font-bold text-center text-slate-800">
             Popular Books
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mt-8">
-            {/* Book Card 1 */}
-            <div className="bg-white shadow-lg rounded-lg p-6 text-center">
-              <img src="https://c.media-amazon.com/images/I/71XEd-5VDhL._SL1500_.jpg" className="w-50 h-50 object-cover rounded-lg mb-4" />
-              <h3 className="text-xl font-semibold text-slate-800">It ends with Us</h3>
-              <p className="text-lightBlue-500 font-semibold mt-2">$19.99</p>
-              <Link to="" className="mt-4 inline-block bg-lightBlue-500 text-black font-semibold py-2 px-4 rounded hover:bg-lightBlue-600 transition duration-300">
-                View Details
-              </Link>
-            </div>
-            {/* Repeat Book Cards */}
-            {/* Book Card 2 */}
-            <div className="bg-white shadow-lg rounded-lg p-6 text-center">
-              <img src="https://c.media-amazon.com/images/I/71ZR6hn+GbL._SL1500_.jpg" alt="Book 2" className="w-50 h-50 object-cover rounded-lg mb-4" />
-              <h3 className="text-xl font-semibold text-slate-800">
-              Sapiens: A Brief History of Humankind</h3>
-              <p className="text-lightBlue-500 font-semibold mt-2">$14.99</p>
-              <Link to="" className="mt-4 inline-block bg-lightBlue-500 text-black font-semibold py-2 px-4 rounded hover:bg-lightBlue-600 transition duration-300">
-                View Details
-              </Link>
-            </div>
-            {/* Book Card 3 */}
-            <div className="bg-white shadow-lg rounded-lg p-6 text-center">
-              <img src="https://c.media-amazon.com/images/I/91kXkSMY2OL._SL1500_.jpg" alt="Book 3" className="w-50 h-50 object-cover rounded-lg mb-4" />
-              <h3 className="text-xl font-semibold text-slate-800">
-              Fire & Blood: 300 Years Before A Game of Thrones (The Targaryen Dynasty: The House of the Dragon)</h3>
-              <p className="text-lightBlue-500 font-semibold mt-2">$9.99</p>
-              <Link to="" className="mt-4 inline-block bg-lightBlue-500 text-black font-semibold py-2 px-4 rounded hover:bg-lightBlue-600 transition duration-300">
-                View Details
-              </Link>
-            </div>
-            {/* Book Card 4 */}
-            <div className="bg-white shadow-lg rounded-lg p-6 text-center">
-              <img src="https://c.media-amazon.com/images/I/71D6Uj4wrcL._SL1500_.jpg" alt="Book 4" className="w-50-40 object-cover rounded-lg mb-4" />
-              <h3 className="text-xl font-semibold text-slate-800">Bhagavad Gita: Essentials</h3>
-              <p className="text-lightBlue-500 font-semibold mt-2">$12.99</p>
-              <Link to="" className="mt-4 inline-block bg-lightBlue-500 text-black font-semibold py-2 px-4 rounded hover:bg-lightBlue-600 transition duration-300">
-                View Details
-              </Link>
-            </div>
-          </div>
+        </h2>
+        <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mt-8'>
+          {homeBooks.length > 0 ? (
+            homeBooks.map((book) => (
+              <div key={book._id} className='bg-white shadow-lg rounded-lg p-6 text-center'>
+                <img src= {book.bookImage} className='w-50 h-50 object-cover rounded-lg mb-4'/>
+                <h3 className='text-xl font-semibold text-slate-800'>
+                  {book.bookname}
+                </h3>
+                <p className="text-lightBlue-500 font-semibold mt-2">
+                     Author : {book.author}
+                </p>
+                <Link
+                    to={`/`} // Link to the book's detail page
+                    className="mt-4 inline-block bg-lightBlue-500 text-black font-semibold py-2 px-4 rounded hover:bg-lightBlue-600 transition duration-300"
+                  >
+                    View Details
+                </Link>
+              </div>
+            ))
+          ):(
+            <p>Loading!!!</p>
+          )}
+        </div>
         </div>
       </section>
 

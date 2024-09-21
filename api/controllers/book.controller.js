@@ -38,3 +38,18 @@ export const viewBook = async(req,res,next) => {
         next(error);
     }
 };
+
+export const viewBooksInCategory = async(req,res) => {
+    const {category} = req.params();
+    try {
+        const books = await Book.find({category: category});
+        if(books.length >0) {
+            res.status(200).json(books);
+        }
+        else{
+            res.status(404).json({message:'No books in this category yet'});
+        }
+    } catch (error) {
+        next(error);
+    }
+};

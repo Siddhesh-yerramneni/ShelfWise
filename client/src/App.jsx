@@ -6,6 +6,7 @@ import Signup from './pages/Signup.jsx';
 import Login from './pages/Login.jsx';
 import PRofile from './pages/Profile.jsx';
 import AddBooks from './pages/AddBooks.jsx';
+import ViewBook from './pages/ViewBook.jsx';
 import Header from './components/Header.jsx';
 import PrivateRoute from './components/PrivateRoute.jsx';
 
@@ -17,6 +18,7 @@ export default function App() {
         <Route path='/' element={<Home />} />
         <Route path='/about' element={<About />} /> {/* About page route */}
         <Route path='/addBooks' element={<AddBooks />} /> {/* About page route */}
+        <Route path='/viewBook/:id' element={<ViewBook />}/>
         <Route path='/login' element={<Login />} />
         <Route path='/signup' element={<Signup />} />
         <Route element={<PrivateRoute />}>

@@ -85,7 +85,7 @@ const Home = () => {
                      Author : {book.author}
                 </p>
                 <Link
-                    to={`/`} // Link to the book's detail page
+                    to={`/viewBook/${book._id}`} // Link to the book's detail page
                     className="mt-4 inline-block bg-lightBlue-500 text-black font-semibold py-2 px-4 rounded hover:bg-lightBlue-600 transition duration-300"
                   >
                     View Details

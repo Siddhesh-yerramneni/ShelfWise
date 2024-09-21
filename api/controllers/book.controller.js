@@ -25,3 +25,16 @@ export const homeBooks = async(req,res) => {
         next(error);
     }
 };
+
+export const viewBook = async(req,res,next) => {
+    try {
+        const bookId = req.params.id;
+        const book = await Book.findById(bookId);
+        if(!book){
+            return res.status(404).json('Book not found');
+        }
+        res.status(200).json(book);
+    } catch (error) {
+        next(error);
+    }
+};

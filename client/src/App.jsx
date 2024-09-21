@@ -9,6 +9,7 @@ import AddBooks from './pages/AddBooks.jsx';
 import ViewBook from './pages/ViewBook.jsx';
 import Header from './components/Header.jsx';
 import PrivateRoute from './components/PrivateRoute.jsx';
+import Fiction from './pages/Fiction.jsx';
 
 export default function App() {
   return (
@@ -19,6 +20,7 @@ export default function App() {
         <Route path='/about' element={<About />} /> {/* About page route */}
         <Route path='/addBooks' element={<AddBooks />} /> {/* About page route */}
         <Route path='/viewBook/:id' element={<ViewBook />}/>
+        <Route path='/category/fiction' element={<Fiction />}/>
         <Route path='/login' element={<Login />} />
         <Route path='/signup' element={<Signup />} />
         <Route element={<PrivateRoute />}>

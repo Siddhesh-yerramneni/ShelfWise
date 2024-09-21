@@ -39,10 +39,9 @@ export const viewBook = async(req,res,next) => {
     }
 };
 
-export const viewBooksInCategory = async(req,res) => {
-    const {category} = req.params();
+export const fictionBooks = async(req,res,next) => {
     try {
-        const books = await Book.find({category: category});
+        const books = await Book.find({category: "Fiction"});
         if(books.length >0) {
             res.status(200).json(books);
         }

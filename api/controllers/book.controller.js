@@ -65,3 +65,16 @@ export const nonFictionBooks = async(req,res,next) => {
         next(error);
     }
 };
+
+export const sciFiBooks = async(req,res,next) => {
+    try {
+        const books = await Book.find({category: "Sci-fi"});
+        if(books.length>0) {
+            res.status(200).json(books);
+        }else{
+            res.status(404).json("No book found");
+        }
+    } catch (error) {
+        next(error);
+    }
+};

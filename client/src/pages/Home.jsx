@@ -28,7 +28,7 @@ const Home = () => {
           <p className="text-lg sm:text-xl text-slate-600 mt-4">
             Discover your next great read today!
           </p>
-          <Link to="/shop" className="mt-8 inline-block bg-lightBlue-500 text-black font-semibold py-3 px-8 rounded-full hover:bg-lightBlue-600 transition duration-300">
+          <Link to="/allBooks" className="mt-8 inline-block bg-lightBlue-500 text-black font-semibold py-3 px-8 rounded-full hover:bg-lightBlue-600 transition duration-300">
             Browse Books
           </Link>
         </div>

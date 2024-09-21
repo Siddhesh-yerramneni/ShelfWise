@@ -12,6 +12,7 @@ import PrivateRoute from './components/PrivateRoute.jsx';
 import Fiction from './pages/Fiction.jsx';
 import NonFiction from './pages/NonFiction.jsx';
 import SciFi from './pages/SciFi.jsx';
+import BrowseBooks from './pages/BrowseBooks.jsx';
 
 export default function App() {
   return (
@@ -24,6 +25,7 @@ export default function App() {
         <Route path='/viewBook/:id' element={<ViewBook />}/>
         <Route path='/category/fiction' element={<Fiction />}/>
         <Route path='/category/non-fiction' element={<NonFiction />}/>
+        <Route path='/allBooks' element={<BrowseBooks />}/>
         <Route path='/category/sci-fi' element={<SciFi />}/>
         <Route path='/login' element={<Login />} />
         <Route path='/signup' element={<Signup />} />

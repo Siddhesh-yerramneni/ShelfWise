@@ -37,7 +37,7 @@ export default function Profile() {
         console.log(progress);
       },
       (error) => {
-        setFileUploadError(true);
+        setFileUploadError('Failed to upload the image.');
       },
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) =>
@@ -145,18 +145,23 @@ export default function Profile() {
 
         {/* Success, Error, or Delete Alerts */}
         {successMessage && (
-          <div className="text-green-500 text-center mb-4">
+          <div className="text-black text-center mb-4">
             {successMessage}
           </div>
         )}
         {errorMessage && (
-          <div className="text-red-500 text-center mb-4">
+          <div className="text-black text-center mb-4">
             {errorMessage}
           </div>
         )}
         {deleteMessage && (
-          <div className="text-blue-500 text-center mb-4">
+          <div className="text-black text-center mb-4">
             {deleteMessage}
+          </div>
+        )}
+        {fileUploadError && (
+          <div className="text-black text-center mb-4">
+            {fileUploadError}
           </div>
         )}
         

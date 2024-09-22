@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux';
 import { useParams, Link } from 'react-router-dom';
 
 export default function ViewBook() {
+  const {currentUser} = useSelector(state=>state.user);
     const {id} = useParams();
     const [book,setBook] = useState('');
 
@@ -29,7 +31,7 @@ export default function ViewBook() {
                 <img
                   src={book.bookImage}
                   alt={book.bookname}
-                  className="w-full h-auto object-cover rounded-lg"
+                  className="w-50 h-50 object-cover rounded-lg"
                 />
               </div>
     
@@ -46,8 +48,12 @@ export default function ViewBook() {
                 <p className="text-md text-gray-700 mb-6">
                   <span className="font-semibold">Description:</span> {book.description}
                 </p>
-    
-                
+                {currentUser && <button className='bg-rose-400 text-white p-3 rounded'>
+                  Write a review
+                </button>}
+                {currentUser && <button className='bg-rose-400 text-white p-3 rounded ml-3'>
+                  Contact author
+                </button> }
               </div>
             </div>
           </div>

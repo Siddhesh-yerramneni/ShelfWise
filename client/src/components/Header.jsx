@@ -16,7 +16,7 @@ export default function Header() {
         <ul className='flex gap-4'>
             <Link to='/'><li className='hidden sm:inline text-white hover:underline'>Home</li></Link>
             <Link to='/about'><li className='hidden sm:inline text-white hover:underline'>About</li></Link>
-            <Link to='/addBooks'><li className='hidden sm:inline text-white hover:underline'>Add books</li></Link>
+            {currentUser && currentUser.isAdmin && (<Link to='/addBooks'><li className='hidden sm:inline text-white hover:underline'>Add books</li></Link>)}
             <Link to='/profile'>
             {currentUser ? (
               <img

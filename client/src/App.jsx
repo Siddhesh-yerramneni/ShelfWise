@@ -13,6 +13,7 @@ import Fiction from './pages/Fiction.jsx';
 import NonFiction from './pages/NonFiction.jsx';
 import SciFi from './pages/SciFi.jsx';
 import BrowseBooks from './pages/BrowseBooks.jsx';
+import OnlyAdminPrivateRoute from './components/OnlyAdminPrivateRoute.jsx';
 
 export default function App() {
   return (
@@ -21,7 +22,9 @@ export default function App() {
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/about' element={<About />} /> {/* About page route */}
+        <Route element={<OnlyAdminPrivateRoute/>}>
         <Route path='/addBooks' element={<AddBooks />} /> {/* About page route */}
+        </Route>
         <Route path='/viewBook/:id' element={<ViewBook />}/>
         <Route path='/category/fiction' element={<Fiction />}/>
         <Route path='/category/non-fiction' element={<NonFiction />}/>

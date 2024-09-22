@@ -5,11 +5,16 @@ export default function BrowseBooks() {
     const [books, setBooks] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
-
+    const [selectedCategory, setSelectedCategory] = useState('All');
+    const categories = ['All', 'Fiction', 'Non-fiction', "Sci-fi"];
     useEffect(() => {
-        const fetchBooks = async () => {
+        const fetchBooksByCategory = async () => {
             try {
-                const res = await fetch('/api/book/allBooks');
+                const url = selectedCategory==='All'
+                ? '/api/book/allBooks'
+                : `/api/book/category/${selectedCategory}`;
+
+                const res = await fetch(url);
                 const data = await res.json();
                 setBooks(data);
             } catch (error) {
@@ -19,8 +24,8 @@ export default function BrowseBooks() {
                 setIsLoading(false);
             }
         };
-        fetchBooks();
-    }, []);
+        fetchBooksByCategory();
+    }, [selectedCategory]);
 
     if (isLoading) return <p>Loading...</p>;
     if (error) return <p>Error: {error}</p>;
@@ -31,6 +36,16 @@ export default function BrowseBooks() {
                 <h2 className="text-2xl sm:text-3xl font-bold text-center text-slate-800">
                     Find your read now !
                 </h2>
+                <div className='flex justify-center mt-4'>
+                {categories.map((category) => (
+                    <button
+                        key={category}
+                        className={`px-4 py-2 mx-2 rounded ${selectedCategory === category ? 'bg-rose-400 text-white' : 'bg-zinc-200'}`}
+                        onClick={() => setSelectedCategory(category)} >
+                        {category}
+                    </button>
+                ))}
+                </div>
                 <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mt-8'>
                     {books.map((book) => (
                         <div key={book._id} className='bg-white shadow-lg rounded-lg p-6 text-center'>

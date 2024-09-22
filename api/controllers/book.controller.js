@@ -92,3 +92,19 @@ export const getAllBooks = async(req,res,next) => {
         next(error)
     }
 };
+
+export const categoryFilter = async(req,res) => {
+    const {category} = req.params;
+    try {
+        // Find books with the matching category
+        const books = await Book.find({ category: category });
+        
+        if (books.length > 0) {
+          res.status(200).json(books);
+        } else {
+          res.status(404).json({ message: 'No books found in this category' });
+        }
+      } catch (error) {
+        res.status(500).json({ error: 'Server error' });
+      }
+};

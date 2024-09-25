@@ -6,7 +6,8 @@ export default function ViewBook() {
   const {currentUser} = useSelector(state=>state.user);
     const {id} = useParams();
     const [book,setBook] = useState('');
-
+    const [showReviewForm, setShowReviewForm] = useState(false);
+    const [review, setReview] = useState('');
     useEffect(()=> {
         const fetchBookDetails = async() => {
             try {
@@ -48,15 +49,39 @@ export default function ViewBook() {
                 <p className="text-md text-gray-700 mb-6">
                   <span className="font-semibold">Description:</span> {book.description}
                 </p>
-                {currentUser && <button className='bg-rose-400 text-white p-3 rounded'>
-                  Write a review
-                </button>}
-                {currentUser && <button className='bg-rose-400 text-white p-3 rounded ml-3'>
+                {currentUser && (
+                  <button
+                    className="bg-rose-400 text-white p-3 rounded hover:bg-zinc-600 transition duration-300"
+                    onClick={() => setShowReviewForm(!showReviewForm)}
+                  >
+                    {showReviewForm ? "Cancel Review" : "Write a review"}
+                  </button>
+                )}
+                {currentUser && <button className='bg-rose-400 text-white p-3 rounded ml-3 hover:bg-zinc-600 transition duration-300'>
                   Contact author
                 </button> }
+                {showReviewForm && (
+                  <div className="bg-white shadow-lg rounded-lg p-8 mt-6">
+                    <form>
+                      <textarea
+                        value={review}
+                        onChange={(e) => setReview(e.target.value)}
+                        placeholder="Write your review here..."
+                        className="w-full h-32 p-4 border border-gray-300 rounded-md"
+                        required
+                      />
+                      <button
+                        type="submit"
+                        className="mt-4 bg-rose-400 text-white font-semibold py-2 px-4 rounded hover:bg-zinc-600 transition duration-300"
+                      >Submit Review
+                      </button>
+                    </form>
+                 </div>
+                )}
               </div>
             </div>
           </div>
+          
           {/* Back to Home Button */}
           <Link
                   to="/"

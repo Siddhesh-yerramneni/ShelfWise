@@ -36,6 +36,8 @@ export default function ViewBook() {
           body: JSON.stringify({
             bookId: id,
             reviewText: review,
+            username: currentUser.username,
+            avatar: currentUser.avatar,
           }),
         });
   
@@ -54,7 +56,6 @@ export default function ViewBook() {
       }
     };
     
-
     return (
         <div className="container mx-auto py-16">
           <div style={{ marginTop: '60px' }} className="bg-white shadow-lg rounded-lg p-8">

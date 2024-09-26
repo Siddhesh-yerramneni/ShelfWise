@@ -20,6 +20,14 @@ const reviewSchema = new mongoose.Schema({
         type: Date,
         default: Date.now(),
     },
+    username: {
+        type: String,
+        required: true,
+    },
+    avatar: {
+        type: String,
+        required: true,
+    },
 }, {timestamps: true}
 );
 

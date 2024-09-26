@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
-import Book from './book.model';
-import User from './user.model';
+import Book from './book.model.js';
+import User from './user.model.js';
 const reviewSchema = new mongoose.Schema({
     bookId : {
         type: mongoose.Schema.Types.ObjectId,
@@ -10,10 +10,6 @@ const reviewSchema = new mongoose.Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: User,
-        required: true,
-    },
-    username: {
-        type: String,
         required: true,
     },
     reviewText: {

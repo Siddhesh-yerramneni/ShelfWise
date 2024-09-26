@@ -7,7 +7,9 @@ export default function ViewBook() {
     const {id} = useParams();
     const [book,setBook] = useState('');
     const [showReviewForm, setShowReviewForm] = useState(false);
+    const [reviews, setReviews] = useState([]);
     const [review, setReview] = useState('');
+    const [error, setError] = useState(null);  // Track any errors
     useEffect(()=> {
         const fetchBookDetails = async() => {
             try {
@@ -21,7 +23,37 @@ export default function ViewBook() {
         fetchBookDetails();
     },[id]);
 
-    //console.log(book);
+    const handleReviewSubmit = async (e) => {
+      e.preventDefault();
+      setError(null);  // Reset the error before making the request
+      try {
+        const res = await fetch('/api/reviews/addReview', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include',
+          body: JSON.stringify({
+            bookId: id,
+            reviewText: review,
+          }),
+        });
+  
+        if (res.ok) {
+          const newReview = await res.json();
+          setReviews([...reviews, newReview]);  // Update reviews state
+          setReview('');
+          setShowReviewForm(false);
+        } else {
+          const data = await res.json();
+          setError(data.message);  // Set error message if review fails
+        }
+      } catch (error) {
+        console.log(error);
+        setError('Failed to submit the review. Please try again.');  // Handle any catch block errors
+      }
+    };
+    
 
     return (
         <div className="container mx-auto py-16">
@@ -62,7 +94,7 @@ export default function ViewBook() {
                 </button> }
                 {showReviewForm && (
                   <div className="bg-white shadow-lg rounded-lg p-8 mt-6">
-                    <form>
+                    <form onSubmit={handleReviewSubmit}>
                       <textarea
                         value={review}
                         onChange={(e) => setReview(e.target.value)}

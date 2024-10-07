@@ -17,7 +17,7 @@ export const addBook = async(req,res,next) => {
     }
 };
 
-export const homeBooks = async(req,res) => {
+export const homeBooks = async(req,res,next) => {
     try {
         const books = await Book.find().limit(4);
         res.json(books);

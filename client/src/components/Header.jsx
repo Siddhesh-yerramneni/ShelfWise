@@ -17,6 +17,7 @@ export default function Header() {
             <Link to='/'><li className='hidden sm:inline text-white hover:underline'>Home</li></Link>
             <Link to='/about'><li className='hidden sm:inline text-white hover:underline'>About</li></Link>
             {currentUser && currentUser.isAdmin && (<Link to='/addBooks'><li className='hidden sm:inline text-white hover:underline'>Add books</li></Link>)}
+            {currentUser && currentUser.isAdmin && (<Link to='/deleteBooks'><li className='hidden sm:inline text-white hover:underline'>Delete books</li></Link>)}
             <Link to='/profile'>
             {currentUser ? (
               <img

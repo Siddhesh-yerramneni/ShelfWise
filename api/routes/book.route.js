@@ -10,4 +10,5 @@ router.get('/category/non-fiction', nonFictionBooks);
 router.get('/category/sci-fi', sciFiBooks);
 router.get('/allBooks', getAllBooks);
 router.get('/category/:category', categoryFilter);
+router.get('/deleteBooks', getAllBooks);
 export default router;

@@ -1,6 +1,6 @@
 import Book from "../models/book.model.js";
-export const addBook = async(req,res,next) => {
-    const {bookname, author, description, price, bookImage, category} = req.body;
+export const addBook = async (req, res, next) => {
+    const { bookname, author, description, price, bookImage, category } = req.body;
     const newBook = new Book({
         bookname,
         author,
@@ -11,11 +11,12 @@ export const addBook = async(req,res,next) => {
     });
     try {
         await newBook.save();
-        res.status(200).json('Book added');
+        res.status(200).json({ success: true, message: 'Book added successfully.' });
     } catch (error) {
-        next(error);
+        res.status(500).json({ success: false, message: 'Failed to add the book.', error: error.message });
     }
 };
+
 
 export const homeBooks = async(req,res,next) => {
     try {

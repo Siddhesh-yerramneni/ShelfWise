@@ -37,11 +37,11 @@ export const deleteReview = async(req,res) => {
     try {
         await Review.findByIdAndDelete(req.params.id);
         res.status(200).json("Deleted the review");
-        console.log("Deleted")
+        //console.log("Deleted")
     } catch (error) {
         console.log(error);
     }
-}
+};
 
 export const editReview = async(req,res) => {
     try {

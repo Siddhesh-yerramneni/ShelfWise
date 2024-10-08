@@ -108,3 +108,13 @@ export const categoryFilter = async(req,res) => {
         res.status(500).json({ error: 'Server error' });
       }
 };
+
+export const deleteBook = async(req,res) => {
+    try {
+        await Book.findByIdAndDelete(req.params.id);
+        res.status(200).json('Book is deleted');
+        console.log('Book is deleted');
+    } catch (error) {
+        console.log(error);
+    }
+};

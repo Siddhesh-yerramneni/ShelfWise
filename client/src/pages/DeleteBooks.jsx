@@ -6,6 +6,7 @@ export default function DeleteBooks() {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const [selectedCategory, setSelectedCategory] = useState('All');
+    const [deleteMessage, setDeleteMessage] = useState('');
     const categories = ['All', 'Fiction', 'Non-fiction', "Sci-fi"];
     useEffect(() => {
         const fetchBooksByCategory = async () => {
@@ -30,6 +31,21 @@ export default function DeleteBooks() {
     if (isLoading) return <p>Loading...</p>;
     if (error) return <p>Error: {error}</p>;
 
+    const handleDeleteBook = async(bookId) => {
+        try {
+            const res = await fetch (`/api/book/deleteBook/${bookId}`, {
+                method: 'DELETE',
+            });
+            setTimeout(() => {
+                window.location.reload();
+              }, 1000);
+            setDeleteMessage('Book Deleted Succesfully');
+        } catch (error) {
+            //console.log(error);
+            setDeleteMessage('Cannot delete the book!');
+        }
+    };
+
     return (
         <section className="py-16 bg-lightBlue-50">
             <div className='container mx-auto'>
@@ -46,6 +62,11 @@ export default function DeleteBooks() {
                     </button>
                 ))}
                 </div>
+                {deleteMessage && (
+              <div className="mt-4 bg-rose-400 rounded-lg p-3 text-black text-center mb-4">
+                {deleteMessage}
+              </div>
+        )}
                 <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mt-8'>
                     {books.map((book) => (
                         <div key={book._id} className='bg-white shadow-lg rounded-lg p-6 text-center'>
@@ -57,7 +78,7 @@ export default function DeleteBooks() {
                                 Author: {book.author}
                             </p>
                             <p className="text-lightBlue-500 font-semibold mt-2">
-                                Author: {book.category}
+                                Category: {book.category}
                             </p>
                             <Link
                                 to={`/viewBook/${book._id}`}
@@ -65,12 +86,12 @@ export default function DeleteBooks() {
                             >
                                 View Details
                             </Link>
-                            <Link
-                                to={`/deleteBook/${book._id}`}
+                            <button
+                                onClick={()=>handleDeleteBook(book._id)}
                                 className=" ml-2 mt-4 inline-block bg-red-600 text-white font-semibold py-2 px-4 rounded"
                             >
                                 Delete
-                            </Link>
+                            </button>
                         </div>
                     ))}
                 </div>

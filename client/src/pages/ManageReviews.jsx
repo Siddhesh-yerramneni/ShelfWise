@@ -33,6 +33,19 @@ function ManageReviews() {
     setSelectedBook(selectedOption ? selectedOption.value : '');
   };
 
+  const handleDeleteReview = async(reviewId) => {
+    try {
+      const res = await fetch(`/api/reviews/adminDeleteReview/${reviewId}`, {
+        method: 'DELETE',
+      });
+      setTimeout(()=> {
+        window.location.reload();
+      },1000);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   const filteredReviews = selectedBook ? reviews.filter(review => review.bookId && review.bookId._id===selectedBook) : reviews;
 
   const bookOptions = books.map(book => ({

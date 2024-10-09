@@ -58,7 +58,7 @@ export const editReview = async(req,res) => {
 
 export const getReviews = async(req,res) => {
     try {
-        const reviews = await Review.find();
+        const reviews = await Review.find().populate('bookId', 'bookname bookImage author');
         res.json(reviews);
     } catch (error) {
         console.log(error);

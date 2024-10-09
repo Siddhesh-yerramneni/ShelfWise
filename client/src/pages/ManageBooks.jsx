@@ -1,21 +1,17 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import Select from 'react-select';
 
-export default function DeleteBooks() {
+export default function ManageBooks() {
     const [books, setBooks] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [selectedCategory, setSelectedCategory] = useState('All');
     const [deleteMessage, setDeleteMessage] = useState('');
-    const categories = ['All', 'Fiction', 'Non-fiction', "Sci-fi"];
+    const [selectedBook, setSelectedBook] = useState('');
     useEffect(() => {
-        const fetchBooksByCategory = async () => {
+        const fetchBooks = async () => {
             try {
-                const url = selectedCategory==='All'
-                ? '/api/book/allBooks'
-                : `/api/book/category/${selectedCategory}`;
-
-                const res = await fetch(url);
+                const res = await fetch('/api/book/allBooks');
                 const data = await res.json();
                 setBooks(data);
             } catch (error) {
@@ -25,8 +21,8 @@ export default function DeleteBooks() {
                 setIsLoading(false);
             }
         };
-        fetchBooksByCategory();
-    }, [selectedCategory]);
+        fetchBooks();
+    }, []);
 
     if (isLoading) return <p>Loading...</p>;
     if (error) return <p>Error: {error}</p>;
@@ -46,20 +42,54 @@ export default function DeleteBooks() {
         }
     };
 
+    const handleBookSelect = (selectedOption) => {
+        setSelectedBook(selectedOption ? selectedOption.value : '');
+      };
+
+    const filteredBooks = selectedBook ? books.filter(book => book._id ===selectedBook) : books;
+
+    const bookOptions = books.map(book => ({
+        value: book._id,
+        label: book.bookname
+      }));
+
     return (
             <div className='container mx-auto py-16'>
                 <h2 className="text-2xl sm:text-3xl font-bold text-center text-slate-800">
-                    Delete a book !!
+                    Manage the books !!
                 </h2>
                 <div className='flex justify-center mt-4'>
-                {categories.map((category) => (
-                    <button
-                        key={category}
-                        className={`px-4 py-2 mx-2 rounded ${selectedCategory === category ? 'bg-rose-400 text-white' : 'bg-zinc-200'}`}
-                        onClick={() => setSelectedCategory(category)} >
-                        {category}
-                    </button>
-                ))}
+                <Select 
+          options={bookOptions}
+          value={bookOptions.find(option => option.value === selectedBook)}
+          onChange={handleBookSelect}
+          placeholder="Search for a book..."
+          isClearable={true}
+          isSearchable={true}
+          styles={{
+            control: (base) => ({
+              ...base,
+              backgroundColor: '#f87180', // bg-rose-400
+              borderColor: '#e5e7eb', // border color
+              borderRadius: '0.375rem', // rounded-md
+              padding: '0.25rem', // p-2
+              height: '1cm',
+              width: '10cm'
+            }),
+            menu: (base) => ({
+              ...base,
+              backgroundColor: '#fff',
+            }),
+            option: (base, state) => ({
+              ...base,
+              backgroundColor: state.isFocused ? '#f3f4f6' : '#fff',
+            }),
+            placeholder: (base) => ({
+              ...base,
+              color: 'black', // Change placeholder text color to black
+            }),
+          }}
+        />
                 </div>
                 {deleteMessage && (
               <div className="mt-4 bg-rose-400 rounded-lg p-3 text-black text-center mb-4">
@@ -67,7 +97,7 @@ export default function DeleteBooks() {
               </div>
         )}
                 <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mt-8'>
-                    {books.map((book) => (
+                    {filteredBooks.map((book) => (
                         <div key={book._id} className='bg-white shadow-lg rounded-lg p-6 text-center'>
                             <img src={book.bookImage} alt={book.bookname} className='w-50 h-50 object-cover rounded-lg mb-4'/>
                             <h3 className='text-xl font-semibold text-slate-800'>

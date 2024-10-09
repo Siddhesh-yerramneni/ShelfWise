@@ -15,6 +15,7 @@ import SciFi from './pages/SciFi.jsx';
 import BrowseBooks from './pages/BrowseBooks.jsx';
 import OnlyAdminPrivateRoute from './components/OnlyAdminPrivateRoute.jsx';
 import DeleteBooks from './pages/DeleteBooks.jsx';
+import ManageReviews from './pages/ManageReviews.jsx';
 export default function App() {
   return (
     <BrowserRouter>
@@ -24,7 +25,8 @@ export default function App() {
         <Route path='/about' element={<About />} /> {/* About page route */}
         <Route element={<OnlyAdminPrivateRoute/>}>
         <Route path='/addBooks' element={<AddBooks />} /> {/* About page route */}
-        <Route path='/deleteBooks' element={<DeleteBooks />} /> {/* About page route */}
+        <Route path='/deleteBooks' element={<DeleteBooks />} />
+        <Route path='/manageReviews' element={<ManageReviews />} />
         </Route>
         <Route path='/viewBook/:id' element={<ViewBook />}/>
         <Route path='/category/fiction' element={<Fiction />}/>

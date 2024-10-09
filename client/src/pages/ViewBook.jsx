@@ -218,7 +218,8 @@ export default function ViewBook() {
                     </div>
                   </div>
                   {currentUser && rev.userId.toString() === currentUser._id.toString() && (
-                        <div className="space-x-4">
+                        <div className='flex flex-row gap-4'>
+                        <div className="space-x-4 flex">
                           <button
                             className="hover:bg-zinc-600 transition duration-300 bg-rose-400 rounded p-2 text-center text-white"
                             onClick={() => handleDeleteReview(rev._id)}
@@ -239,6 +240,7 @@ export default function ViewBook() {
                           >
                             {editReviewId === rev._id ? 'Cancel Editing' : 'Edit Review'}
                           </button>
+                        </div>
                         </div>
                       )}
                     </div>

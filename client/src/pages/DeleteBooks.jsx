@@ -47,8 +47,7 @@ export default function DeleteBooks() {
     };
 
     return (
-        <section className="py-16 bg-lightBlue-50">
-            <div className='container mx-auto'>
+            <div className='container mx-auto py-16'>
                 <h2 className="text-2xl sm:text-3xl font-bold text-center text-slate-800">
                     Delete a book !!
                 </h2>
@@ -96,6 +95,5 @@ export default function DeleteBooks() {
                     ))}
                 </div>
             </div>
-        </section>
     );
 }

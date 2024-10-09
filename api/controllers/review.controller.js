@@ -55,3 +55,12 @@ export const editReview = async(req,res) => {
         console.log(error);
     }
 };
+
+export const getReviews = async(req,res) => {
+    try {
+        const reviews = await Review.find();
+        res.json(reviews);
+    } catch (error) {
+        console.log(error);
+    }
+}

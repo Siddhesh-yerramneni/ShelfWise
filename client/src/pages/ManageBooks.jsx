@@ -99,7 +99,7 @@ export default function ManageBooks() {
                 <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mt-8'>
                     {filteredBooks.map((book) => (
                         <div key={book._id} className='bg-white shadow-lg rounded-lg p-6 text-center'>
-                            <img src={book.bookImage} alt={book.bookname} className='w-50 h-50 object-cover rounded-lg mb-4'/>
+                            <img src={book.bookImage} alt={book.bookname} className='w-50 h-50 object-cover rounded-lg mb-4'  style={{ width: '10cm', height: '15cm' }}/>
                             <h3 className='text-xl font-semibold text-slate-800'>
                                 {book.bookname}
                             </h3>
@@ -109,18 +109,26 @@ export default function ManageBooks() {
                             <p className="text-lightBlue-500 font-semibold mt-2">
                                 Category: {book.category}
                             </p>
+                            <div className='flex justify-between gap-2'>
                             <Link
                                 to={`/viewBook/${book._id}`}
                                 className="mt-4 inline-block bg-rose-400 text-black font-semibold py-2 px-4 rounded hover:bg-lightBlue-600 transition duration-300"
                             >
                                 View Details
                             </Link>
+                            <Link
+                                to={`/updateBook/${book._id}`}
+                                className="mt-4 inline-block bg-rose-400 text-black font-semibold py-2 px-4 rounded hover:bg-lightBlue-600 transition duration-300"
+                            >
+                                Update the book
+                            </Link>
                             <button
                                 onClick={()=>handleDeleteBook(book._id)}
-                                className=" ml-2 mt-4 inline-block bg-red-600 text-white font-semibold py-2 px-4 rounded"
+                                className="mt-4 inline-block bg-red-600 text-white font-semibold py-2 px-4 rounded"
                             >
                                 Delete
                             </button>
+                            </div>
                         </div>
                     ))}
                 </div>

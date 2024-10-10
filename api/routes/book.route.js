@@ -1,9 +1,10 @@
 import express from 'express';
-import { addBook, homeBooks, viewBook, fictionBooks, nonFictionBooks, sciFiBooks, getAllBooks, categoryFilter, deleteBook } from '../controllers/book.controller.js';
+import { addBook, updateBook, homeBooks, viewBook, fictionBooks, nonFictionBooks, sciFiBooks, getAllBooks, categoryFilter, deleteBook } from '../controllers/book.controller.js';
 import { verifyToken } from '../utils/verifyUser.js';
 
 const router = express.Router();
 router.post('/addBook', addBook);
+router.post('/updateBook/:id', updateBook );
 router.get('/homeBooks', homeBooks);
 router.get('/viewBook/:id', viewBook);
 router.get('/category/fiction', fictionBooks);

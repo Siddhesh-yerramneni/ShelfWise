@@ -17,6 +17,30 @@ export const addBook = async (req, res, next) => {
     }
 };
 
+export const updateBook = async (req, res) => {
+    try {
+        const updatedBook = await Book.findByIdAndUpdate(
+            req.params.id,
+            {
+                $set: {
+                    bookImage: req.body.bookImage,
+                    bookname: req.body.bookname,
+                    author: req.body.author,
+                    price: req.body.price,
+                    category: req.body.category,
+                    description: req.body.description,
+                },
+            },
+            { new: true }
+        );
+        res.status(200).json({ success: true, message: 'Book updated successfully', book: updatedBook });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ success: false, message: 'Internal Server Error' });
+    }
+};
+
+
 
 export const homeBooks = async(req,res,next) => {
     try {

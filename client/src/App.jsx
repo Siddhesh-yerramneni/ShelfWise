@@ -16,6 +16,7 @@ import BrowseBooks from './pages/BrowseBooks.jsx';
 import OnlyAdminPrivateRoute from './components/OnlyAdminPrivateRoute.jsx';
 import ManageBooks from './pages/ManageBooks.jsx';
 import ManageReviews from './pages/ManageReviews.jsx';
+import UpdateBook from './pages/UpdateBook.jsx';
 export default function App() {
   return (
     <BrowserRouter>
@@ -27,6 +28,7 @@ export default function App() {
         <Route path='/addBooks' element={<AddBooks />} /> {/* About page route */}
         <Route path='/manageBooks' element={<ManageBooks />} />
         <Route path='/manageReviews' element={<ManageReviews />} />
+        <Route path='/updateBook/:id' element={<UpdateBook />} />
         </Route>
         <Route path='/viewBook/:id' element={<ViewBook />}/>
         <Route path='/category/fiction' element={<Fiction />}/>
